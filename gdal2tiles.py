@@ -2092,7 +2092,9 @@ def process_base_tile_job(out_data,tiledriver, options, resampling, tilebands, q
     "Create the drivers and the tile bounds, then generate the base tile"
     out_drv,mem_drv = init_drv(tiledriver)
     ds=out_data.out_ds
-    tilefilename = os.path.join(output, str(tz), str(tx), "%s.%s" % (ty, tileext))
+    # XXX MIKE
+    ty1=(2**tz - 1) - ty 
+    tilefilename = os.path.join(output, str(tz), str(tx), "%s.%s" % (ty1, tileext))
     
     rb,wb,querysize= tile_bounds(tmaxx, tmaxy, ds, querysize, tz, ty, tx,options,mercator,geodetic,tile.tsize,out_data.out_ds,tile.nativezoom)
 
@@ -2162,7 +2164,9 @@ def generate_base_tiles(config,profile,tile,out_data):
 
 def read_tile(tz, output, tileext, y, x):
     "Read a tile"
-    dsquerytile = gdal.Open(os.path.join(output, str(tz + 1), str(x), "%s.%s" % (y, tileext)), gdal.GA_ReadOnly)
+    # XXX MIKE
+    y2=(2**(tz+1) - 1) - y
+    dsquerytile = gdal.Open(os.path.join(output, str(tz + 1), str(x), "%s.%s" % (y2, tileext)), gdal.GA_ReadOnly)
     tile_r = dsquerytile.ReadRaster(0, 0, TILESIZE, TILESIZE)
     return tile_r
 
@@ -2219,7 +2223,9 @@ def generate_overview_tile(tilebands, tz, ty, tx, tilefilename,mem_drv,out_drv,o
 def process_overview_tile_job(output,options,tiledriver,resampling,tileext, tile, tilebands, tz, ty, tx):
     "Create the drivers and generate the overview tile"
     out_drv,mem_drv = init_drv(tiledriver)
-    tilefilename = os.path.join(output, str(tz), str(tx), "%s.%s" % (ty, tileext))
+    # XXX MIKE
+    ty2=(2**tz - 1) - ty
+    tilefilename = os.path.join(output, str(tz), str(tx), "%s.%s" % (ty2, tileext))
     generate_overview_tile(tilebands, tz, ty, tx, tilefilename,mem_drv,out_drv,output,options,tiledriver,resampling,tileext,tile)
 
 def generate_overview_tiles(config,profile,tile,out_data):
